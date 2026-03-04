@@ -9,5 +9,5 @@ jobs:
          
        - name: 'Printing Folders'
          run: |
-            echo ls -l
+             ls -l
        
