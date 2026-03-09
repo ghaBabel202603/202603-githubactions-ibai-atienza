@@ -1,0 +1,25 @@
+name: 08 - Expressions
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: "Enable debug mode"
+        required: false
+        type: boolean
+        default: false
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "[${{inputs.debug}}] Print start-up"
+        if: ${{inputs.debug == true}}
+        run: |
+          echo "Event: ${{github.event_name}}"
+          echo "Ref: ${{github.ref}}"
+          echo "Sha: ${{runner.name}}"
+      - name: "[${{inputs.debug}}] Print when triggered from main"
+        if: ${{inputs.debug == true && github.ref == 'refs/heads/main'}}
+        run: echo "I was triggered from main"
+      - name: Greeting
+        run: echo "Hello world!"
