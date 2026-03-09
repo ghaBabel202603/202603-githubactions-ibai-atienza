@@ -1,20 +1,23 @@
 name: 04 - Uso de Actions
-on: push
+on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v6
-      - name: Node Setup
+      - name: "Checkout Code"
+        uses: actions/checkout@v4
+
+      - name: "Node Setup"
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
-      - name: Install dependencies
+          node-version: "24.x"
+
+      - name: "Install Dependencies"
+        working-directory: ./my-app
         run: |
-          cd my-app
           npm ci
-      - name: Run Unit Tests
+
+      - name: "Run Unit Tests"
+        working-directory: ./my-app
         run: |
-          cd my-app
-          npm test
+          npm run test
