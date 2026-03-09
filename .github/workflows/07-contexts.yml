@@ -1,5 +1,5 @@
 name: 07 - Contexts
-run-name: 07 - Contexts | DEBUG - ${{ inputs.debug }}
+run-name: 07 - Contexts | EVENT NAME - ${{github.event_name}}
 on:
   push:
   workflow_dispatch:
@@ -13,6 +13,8 @@ jobs:
   echo-data:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug status
+        run: echo "The debug is ${{ case(inputs.debug == true, 'enabled', 'disabled') }}"
       - name: Show github context
         run: |
           echo "Event: ${{github.event_name}}"
