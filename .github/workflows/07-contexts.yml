@@ -1,0 +1,24 @@
+name: 07 - Contexts
+run-name: 07 - Contexts | DEBUG - ${{ inputs.debug }}
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: "Enable debug mode"
+        required: false
+        type: boolean
+        default: false
+jobs:
+  echo-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show github context
+        run: |
+          echo "Event: ${{github.event_name}}"
+          echo "Ref: ${{github.ref}}"
+          echo "Sha: ${{github.sha}}""
+          echo "Actor: ${{github.actor}}"
+          echo "Workflow: ${{github.workflow}}"
+      - name: Show var
+        run: echo "MY_VAR = ${{vars.MY_VAR}}"
