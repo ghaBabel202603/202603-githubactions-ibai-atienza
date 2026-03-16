@@ -1,4 +1,4 @@
-name: 14 - Using Cache
+name: 15 - Working with artifacts
 on:
   workflow_dispatch:
     inputs:
