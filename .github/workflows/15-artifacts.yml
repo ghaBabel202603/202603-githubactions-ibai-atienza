@@ -1,0 +1,58 @@
+name: 14 - Using Cache
+on:
+  workflow_dispatch:
+    inputs:
+      use-cache:
+        description: "Use cache"
+        required: false
+        type: boolean
+        default: false
+      node-version:
+        description: "Node version"
+        required: false
+        type: choice
+        options:
+          - "18.x"
+          - "20.x"
+          - "22.x"
+          - "24.x"
+        default: "24.x"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./react-app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "${{inputs.node-version}}"
+      - name: Uses cache
+        id: cache-node-modules
+        if: ${{ inputs.use-cache == true }}
+        uses: actions/cache@v4
+        with:
+          path: ./react-app/node_modules
+          key: "${{ inputs.node-version }}-${{ hashFiles('**/package-lock.json') }}"
+      - name: Install Dependencies
+        if: ${{ steps.cache-node-modules.outputs.cache-hit == false }}
+        run: npm ci
+      - name: Run Tests
+        run: npm run test
+      - name: Building
+        run: npm run build
+      - name: Deploying to nonprod
+        run: echo "Deploying to nonprod"
+      - name: Get artifact name
+        id: get-artifact-name
+        run: |
+          echo "artifact-name=build-$(npm pkg get version | tr -d \")" >> $GITHUB_OUTPUT
+
+      - name: Upload build files
+        uses: actions/upload-artifact@v6
+        with:
+          path: ./react-app/build
+          name: ${{steps.get-artifact-name.outputs.artifact-name}}
